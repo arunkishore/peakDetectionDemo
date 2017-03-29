@@ -16,9 +16,9 @@ def butter_lowpass_filter(data, cutoff, fs, order=5):
 
 
 # Filter requirements.
-order = 4
+order = 1
 fs = 50.0       # sample rate, Hz
-cutoff = 5# desired cutoff frequency of the filter, Hz
+cutoff = 0.3# desired cutoff frequency of the filter, Hz
 
 # Get the filter coefficients so we can check its frequency response.
 b, a = butter_lowpass(cutoff, fs, order)
@@ -57,3 +57,25 @@ plt.legend()
 
 plt.subplots_adjust(hspace=0.35)
 plt.show()
+
+import scipy.signal as scisig
+
+def butter_lowpass_filter(data, cutoff, fs, order=5):
+    # Filtering Helper functions
+    b, a = butter_lowpass(cutoff, fs, order=order)
+    y = scisig.lfilter(b, a, data)
+    return y
+
+def butter_lowpass(cutoff, fs, order=5):
+    # Filtering Helper functions
+    nyq = 0.5 * fs
+    normal_cutoff = cutoff / nyq
+    b, a = scisig.butter(order, normal_cutoff, btype='low', analog=False)
+    return b, a
+
+
+plt.plot(t, data, 'b-', label='data')
+plt.plot(t, butter_lowpass_filter(data,30, 50,3), 'b-', label='data')
+
+
+
